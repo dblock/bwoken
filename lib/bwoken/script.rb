@@ -50,6 +50,8 @@ module Bwoken
     def run
       formatter.before_script_run path
 
+      Bwoken.logger.debug cmd
+
       Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
         exit_status = formatter.format stdout
         raise ScriptFailedError.new('Test Script Failed') unless exit_status == 0

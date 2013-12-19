@@ -61,6 +61,7 @@ BANNER
 
         Bwoken.integration_path = options[:'integration-path']
         Bwoken.app_name = options[:'product-name']
+        Bwoken.verbose = options[:'verbose']
       end
 
       def run

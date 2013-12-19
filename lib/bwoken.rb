@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'logger'
 
 module Bwoken
   class << self
@@ -78,5 +79,18 @@ module Bwoken
       end
     end
 
+    def verbose=(value)
+      @verbose = value
+    end
+
+    def verbose
+      !! @verbose
+    end
+
+    def logger
+      @logger ||= Logger.new(STDOUT).tap do |logger|
+        logger.level = verbose ? Logger::DEBUG : Logger::INFO
+      end
+    end
   end
 end

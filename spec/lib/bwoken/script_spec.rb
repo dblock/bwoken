@@ -33,6 +33,13 @@ describe Bwoken::Script do
       subject.run
     end
 
+    it 'logs the command being run' do
+      subject.stub(:cmd).and_return('cmd')
+      Open3.stub(:popen3)
+      Bwoken.logger.should_receive(:debug).with('cmd')
+      subject.run
+    end
+
     context 'when passing' do
       it 'does not raise a ScriptFailedError' do
         Open3.stub(:popen3).and_yield(*%w(in out err thr))

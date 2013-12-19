@@ -76,6 +76,8 @@ module Bwoken
     def compile
       formatter.before_build_start
 
+      Bwoken.logger.debug cmd
+
       succeeded, out_string, err_string = RUBY_VERSION == '1.8.7' ? compile_18 : compile_19_plus
 
       if succeeded
