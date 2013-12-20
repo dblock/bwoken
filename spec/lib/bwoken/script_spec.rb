@@ -15,6 +15,7 @@ describe Bwoken::Script do
   describe '#run' do
     let(:exit_status) { 0 }
     before do
+      IO.stub(:sysopen).and_return(STDOUT.fcntl(Fcntl::F_DUPFD))
       subject.formatter.stub(:format).and_return(exit_status)
       subject.formatter.stub(:before_script_run)
     end
@@ -129,6 +130,14 @@ describe Bwoken::Script do
       let(:expected_device_flag_regexp) { '' }
 
       its(:cmd) { should match regexp }
+    end
+  end
+
+  describe "#check_ptyvf!" do
+    it "raises an exception when busy" do
+      subject.formatter.stub(:before_script_run)
+      IO.should_receive(:sysopen).with('/dev/ptyvf', 'r').and_raise('busy!')
+      expect { subject.run }.to raise_error RuntimeError, "busy!"
     end
   end
 

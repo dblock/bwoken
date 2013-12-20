@@ -47,8 +47,21 @@ module Bwoken
       simulator ? '' : "-w #{Bwoken::Device.uuid}"
     end
 
+    # unix_instruments will try to open /dev/ptyvf
+    def check_ptyvf!
+      ptyvf_fd = IO.sysopen('/dev/ptyvf', 'r')
+      ptyvf_io = IO.new(ptyvf_fd, 'r')
+    rescue Errno::EBUSY => e
+      # TODO: log error here
+      raise
+    ensure
+      ptyvf_io.close if ptyvf_io
+    end
+
     def run
       formatter.before_script_run path
+
+      check_ptyvf!
 
       Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
         exit_status = formatter.format stdout
